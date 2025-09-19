@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🔄 Movement History</h2>
+    <p>Track all product movements between locations</p>
+</div>
+
+<div class="action-bar">
+    <a href="{{ url_for('add_movement') }}" class="btn btn-success">🔄 Record New Movement</a>
+</div>
+
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Movement ID</th>
+                <th>Timestamp</th>
+                <th>From Location</th>
+                <th>To Location</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for movement in movements %}
+            <tr>
+                <td><strong>{{ movement.movement_id }}</strong></td>
+                <td>{{ movement.timestamp }}</td>
+                <td>{{ movement.from_location_name or 'N/A' }}</td>
+                <td>{{ movement.to_location_name or 'N/A' }}</td>
+                <td>{{ movement.product_name }}</td>
+                <td>{{ movement.quantity }}</td>
+                <td>{{ movement.notes or 'No notes' }}</td>
+                <td class="table-actions">
+                    <a href="{{ url_for('edit_movement', movement_id=movement.movement_id) }}" class="btn btn-sm btn-primary">✏️ Edit</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-center">No movements recorded. <a href="{{ url_for('add_movement') }}">Record your first movement</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>📦 Product Management</h2>
+    <p>Manage your product catalog and inventory items</p>
+</div>
+
+<div class="action-bar">
+    <a href="{{ url_for('add_product') }}" class="btn btn-success">➕ Add New Product</a>
+</div>
+
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td><strong>{{ product.product_id }}</strong></td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.description or 'No description' }}</td>
+                <td class="table-actions">
+                    <a href="{{ url_for('edit_product', product_id=product.product_id) }}" class="btn btn-sm btn-primary">✏️ Edit</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center">No products found. <a href="{{ url_for('add_product') }}">Add your first product</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockTrack Pro - Inventory Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>📦 StockTrack Pro</h1>
+                <span>Advanced Inventory Management System</span>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}" class="{% if request.path == '/' %}active{% endif %}">🏠 Dashboard</a></li>
+                    <li><a href="{{ url_for('products_list') }}" class="{% if request.path.startswith('/products') %}active{% endif %}">📋 Products</a></li>
+                    <li><a href="{{ url_for('locations_list') }}" class="{% if request.path.startswith('/locations') %}active{% endif %}">🏢 Locations</a></li>
+                    <li><a href="{{ url_for('movements_list') }}" class="{% if request.path.startswith('/movements') %}active{% endif %}">🔄 Movements</a></li>
+                    <li><a href="{{ url_for('inventory_report') }}" class="{% if request.path.startswith('/reports') %}active{% endif %}">📊 Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash flash-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

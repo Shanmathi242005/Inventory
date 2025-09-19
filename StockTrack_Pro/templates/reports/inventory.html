@@ -1,0 +1,80 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h2>📊 Inventory Balance Report</h2>
+    <p>Current stock levels across all locations</p>
+</div>
+
+<div class="report-summary">
+    <div class="summary-card">
+        <h3>📦 Total Products</h3>
+        <p class="summary-number">{{ report_data | length }}</p>
+        <p class="summary-label">Unique product-location combinations</p>
+    </div>
+    
+    <div class="summary-card">
+        <h3>🏢 Locations with Stock</h3>
+        <p class="summary-number">
+            {{ report_data | map(attribute='location_id') | unique | list | length }}
+        </p>
+        <p class="summary-label">Active locations</p>
+    </div>
+    
+    <div class="summary-card">
+        <h3>📈 Total Inventory</h3>
+        <p class="summary-number">
+            {{ report_data | sum(attribute='balance') }}
+        </p>
+        <p class="summary-label">Units in stock</p>
+    </div>
+</div>
+
+<div class="table-container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Warehouse/Location</th>
+                <th>Quantity</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in report_data %}
+            <tr>
+                <td>
+                    <strong>{{ item.product_name }}</strong>
+                    <br><small class="text-muted">ID: {{ item.product_id }}</small>
+                </td>
+                <td>
+                    <strong>{{ item.location_name }}</strong>
+                    <br><small class="text-muted">ID: {{ item.location_id }}</small>
+                </td>
+                <td>
+                    <span class="quantity-badge">{{ item.balance }}</span>
+                </td>
+                <td>
+                    {% if item.balance > 50 %}
+                    <span class="status-badge high">High Stock</span>
+                    {% elif item.balance > 10 %}
+                    <span class="status-badge medium">Medium Stock</span>
+                    {% else %}
+                    <span class="status-badge low">Low Stock</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center">No inventory data available. Record some movements first.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="report-actions">
+    <button onclick="window.print()" class="btn btn-info">🖨️ Print Report</button>
+    <a href="{{ url_for('movements_list') }}" class="btn btn-primary">🔄 View Movements</a>
+</div>
+{% endblock %}
